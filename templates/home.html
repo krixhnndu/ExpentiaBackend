@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | Expense Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #d4cc72, #c0a1a1, #8fd0d0);
+            color: #2d3748;
+            line-height: 1.6;
+        }
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 40px;
+            background: #ece2e2;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            color: #000000;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar h1::before {
+            content: "\f080";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            margin-right: 12px;
+            font-size: 22px;
+            color: #000000;
+        }
+
+        /* Navigation Menu */
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-button {
+            text-decoration: none;
+            background: #718096;
+            color: #000000;
+            padding: 10px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 8px rgba(201, 205, 210, 0.3);
+        }
+
+        .nav-button:hover {
+            background: #718096;;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(201, 205, 210, 0.3);
+        }
+        
+        /* Updated logout button style to match the second file */
+        .logout-button {
+            background:#718096;
+            color: #000000;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logout-button:hover {
+            background:#718096;;
+            color: rgb(0, 0, 0);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 70px 20px 40px;
+            background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(240,249,255,1) 100%);
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .hero h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #2d3748;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .hero h2::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: #718096;
+            border-radius: 2px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+            color: #4a5568;
+        }
+
+        /* Features Section */
+        .features-heading {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .features-heading h3 {
+            font-size: 28px;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .features-heading p {
+            color: #718096;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 20px 30px 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-box {
+            width: 300px;
+            padding: 30px;
+            background: #ffffff;
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .feature-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border-color: rgba(203, 213, 224, 0.8);
+        }
+
+        .feature-box i {
+            font-size: 36px;
+            color: #718096;
+            margin-bottom: 20px;
+            background: rgba(58, 134, 255, 0.1);
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+        }
+
+        .feature-box h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #2d3748;
+            font-weight: 600;
+        }
+        
+        .feature-box p {
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        /* Contact & CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #718096, #6366f1);
+            padding: 60px 20px;
+            text-align: center;
+            border-radius: 20px;
+            margin: 40px auto 60px;
+            max-width: 900px;
+            color: white;
+            box-shadow: 0 15px 30px rgba(58, 134, 255, 0.3);
+        }
+        
+        .cta-section h3 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .cta-section p {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            font-size: 17px;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            text-decoration: none;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .primary-button {
+            background: white;
+            color: #000000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .primary-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .secondary-button {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+        }
+        
+        .secondary-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: white;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            color: #718096;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <h1>Expentia</h1>
+    <div class="nav-menu">
+        <a href="/dashboard" class="nav-button">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+        <a href="/expensetracker" class="nav-button">
+            <i class="fas fa-tachometer-alt"></i> Expense Tracker
+        </a>
+        <a href="/index" class="logout-button">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+</div>
+
+<!-- Hero Section -->
+<div class="hero">
+    <h2 id="username">Welcome!</h2>
+    <p>Take control of your finances with our powerful expense tracking platform. Monitor your spending, set budgets, and achieve your financial goals.</p>
+</div>
+
+<!-- Features Section -->
+<div class="container">
+    <div class="features-heading">
+        <h3>Powerful Features</h3>
+        <p>Everything you need to take control of your financial life</p>
+    </div>
+    
+    <div class="features">
+        <div class="feature-box">
+            <i class="fas fa-chart-line"></i>
+            <h3>Expense Analytics</h3>
+            <p>Track spending patterns with interactive charts and detailed statistics to make smarter financial decisions.</p>
+        </div>
+        <div class="feature-box">
+            <i class="fas fa-wallet"></i>
+            <h3>Budget Planning</h3>
+            <p>Create custom budgets for different categories and receive alerts when you're approaching your limits.</p>
+        </div>
+        <div class="feature-box">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <h3>Financial Reports</h3>
+            <p>Generate comprehensive monthly and yearly reports to better understand your financial health.</p>
+        </div>
+    </div>
+    
+    <!-- Call to Action Section -->
+    <div class="cta-section">
+        <h3>Ready to Take Control of Your Finances?</h3>
+        <p>Start tracking your expenses today and take the first step towards financial freedom.</p>
+        <div class="cta-buttons">
+            <a href="/contact" class="cta-button primary-button">
+                <i class="fas fa-headset"></i> Contact Support
+            </a>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Expentia. All rights reserved.</p>
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    fetchUsername();
+});
+
+async function fetchUsername() {
+    try {
+        let response = await fetch("/api/username");
+        let data = await response.json();
+        document.getElementById("username").textContent = "Welcome, " + data.username + "!";
+    } catch (error) {
+        console.error("Error fetching username:", error);
+    }
+}
+</script>
+
+</body>
+</html>

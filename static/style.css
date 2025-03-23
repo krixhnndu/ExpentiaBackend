@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+/* Reset and General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Animated Background */
+.animated-bg {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #1a3708, #cf065a, #099b9b, #ff5733);
+    background-size: 400% 400%;
+    animation: gradientAnimation 10s infinite alternate ease-in-out;
+    z-index: -1;
+}
+
+/* Gradient Animation */
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+/* Spider Web */
+.web {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(white, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    animation: webGlow 5s infinite alternate ease-in-out;
+}
+
+/* Web Glow Animation */
+@keyframes webGlow {
+    0% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.3); }
+    100% { box-shadow: 0 0 30px rgba(255, 255, 255, 0.7); }
+}
+
+/* Center Content */
+/* Center Content */
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: black;
+    z-index: 2;
+    width: 100%;
+}
+
+h1 {
+    font-size: 48px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+    font-family: "Baskerville", "Times New Roman", serif;
+}
+
+p {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+/* Button */
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: white;
+    color: #ffcc00;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: 0.3s;
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+}
+
+.btn:hover {
+    background: #900639;
+    color: rgb(251, 240, 240);
+    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.5);
+}
+
+
+/* Expenses Caught in Web */
+.expenses {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.expense {
+    position: absolute;
+    font-size: 30px;
+    color: white;
+    animation: floatAnimation 6s infinite alternate ease-in-out;
+}
+
+/* Positioning Expenses Randomly */
+.expense:nth-child(1) { top: 10%; left: 30%; animation-duration: 4s; }
+.expense:nth-child(2) { top: 50%; left: 10%; animation-duration: 5s; }
+.expense:nth-child(3) { top: 70%; left: 80%; animation-duration: 6s; }
+.expense:nth-child(4) { top: 20%; left: 80%; animation-duration: 7s; }
+.expense:nth-child(5) { top: 80%; left: 30%; animation-duration: 8s; }
+.expense:nth-child(6) { top: 40%; left: 70%; animation-duration: 4s; }
+.expense:nth-child(7) { top: 60%; left: 50%; animation-duration: 5s; }
+.expense:nth-child(8) { top: 25%; left: 15%; animation-duration: 6s; }
+.expense:nth-child(9) { top: 75%; left: 60%; animation-duration: 7s; }
+.expense:nth-child(10) { top: 10%; left: 60%; animation-duration: 8s; }
+.expense:nth-child(11) { top: 90%; left: 20%; animation-duration: 9s; }
+.expense:nth-child(12) { top: 30%; left: 90%; animation-duration: 10s; }
+
+/* Floating Effect */
+@keyframes floatAnimation {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-15px); }
+}

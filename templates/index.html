@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expentia - Expense Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1e3a5f;
+            --secondary-color: #304a7d;
+            --accent-color: #c8a45c;
+            --text-color: #333333;
+            --text-light: #ffffff;
+            --background-color: #f9f8f6;
+            --card-bg: #ffffff;
+            --shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--background-color);
+            background-image: linear-gradient(to bottom right, rgba(245, 245, 250, 0.8), rgba(245, 245, 250, 0.2));
+            height: 100vh;
+            color: var(--text-color);
+            overflow: hidden;
+            position: relative;
+            perspective: 1000px;
+        }
+        
+        /* Enhanced 3D background elements */
+        .background-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c8a45c' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.6;
+            transform: translateZ(-50px);
+        }
+        
+        /* 3D floating planes */
+        .floating-plane {
+            position: absolute;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform-style: preserve-3d;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        .plane-1 {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+            transform: rotateX(45deg) rotateY(15deg) translateZ(-150px);
+        }
+        
+        .plane-2 {
+            width: 250px;
+            height: 250px;
+            bottom: 10%;
+            right: 5%;
+            animation-delay: 2s;
+            transform: rotateX(35deg) rotateY(-15deg) translateZ(-120px);
+        }
+        
+        .plane-3 {
+            width: 200px;
+            height: 200px;
+            top: 70%;
+            left: 8%;
+            animation-delay: 1s;
+            transform: rotateX(25deg) rotateY(25deg) translateZ(-100px);
+        }
+        
+        /* Enhanced accent element */
+        .accent-element {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            right: 0;
+            top: 0;
+            background: linear-gradient(135deg, rgba(30, 58, 95, 0.03) 0%, rgba(200, 164, 92, 0.05) 100%);
+            clip-path: polygon(20% 0%, 100% 0%, 100% 100%, 10% 100%);
+            transform: translateZ(-30px);
+        }
+        
+        .container {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+            padding: 0 20px;
+            transform-style: preserve-3d;
+        }
+        
+        /* Enhanced 3D card styles */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.1),
+                0 30px 60px rgba(30, 58, 95, 0.08),
+                0 8px 16px rgba(200, 164, 92, 0.05);
+            padding: 4.5rem;
+            max-width: 520px;
+            width: 90%;
+            position: relative;
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            overflow: hidden;
+            border: 1px solid rgba(200, 164, 92, 0.1);
+            transform-style: preserve-3d;
+            transform: translateZ(50px);
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(200, 164, 92, 0.05) 0%, rgba(255, 255, 255, 0) 50%);
+            z-index: -1;
+        }
+        
+        /* Card 3D hover effect */
+        .card:hover {
+            transform: translateY(-10px) translateZ(60px) scale(1.02);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.15),
+                0 40px 80px rgba(30, 58, 95, 0.1),
+                0 15px 25px rgba(200, 164, 92, 0.07);
+        }
+        
+        .logo-container {
+            margin-bottom: 2.5rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            transform-style: preserve-3d;
+        }
+        
+        /* Enhanced SVG Logo styles with 3D effect */
+        .svg-logo {
+            width: 180px;
+            margin-bottom: 1.5rem;
+            display: block;
+            filter: drop-shadow(0 8px 16px rgba(30, 58, 95, 0.15));
+            transform: translateZ(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .svg-logo:hover {
+            transform: translateZ(30px) scale(1.05);
+            filter: drop-shadow(0 10px 20px rgba(30, 58, 95, 0.25));
+        }
+        
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            letter-spacing: -1px;
+            position: relative;
+            display: inline-block;
+            transform: translateZ(15px);
+            text-shadow: 2px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-accent {
+            position: absolute;
+            width: 40px;
+            height: 2px;
+            background: var(--accent-color);
+            bottom: 15px;
+            right: -10px;
+            transform: translateZ(5px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tagline {
+            font-size: 1.15rem;
+            font-weight: 300;
+            margin-bottom: 3.5rem;
+            color: var(--secondary-color);
+            letter-spacing: 0.5px;
+            transform: translateZ(10px);
+            text-align: center;
+            opacity: 0.9;
+        }
+        
+        /* Enhanced 3D button */
+        .btn {
+            display: inline-block;
+            background: linear-gradient(to right, var(--accent-color), #d9b978);
+            color: var(--primary-color);
+            padding: 16px 48px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 
+                0 6px 12px rgba(200, 164, 92, 0.2),
+                0 12px 24px rgba(30, 58, 95, 0.1);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+            outline: none;
+            transform: translateZ(25px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.3));
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-5px) translateZ(35px) scale(1.05);
+            box-shadow: 
+                0 10px 20px rgba(200, 164, 92, 0.3),
+                0 15px 30px rgba(30, 58, 95, 0.15);
+            background: linear-gradient(to right, #d9b978, var(--accent-color));
+        }
+        
+        .btn:hover::before {
+            transform: translateX(100%);
+        }
+        
+        /* Enhanced decorative elements with 3D */
+        .decorative-circle {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(200, 164, 92, 0.2);
+            z-index: -1;
+            box-shadow: inset 0 0 20px rgba(200, 164, 92, 0.05);
+        }
+        
+        .circle-1 {
+            width: 120px;
+            height: 120px;
+            top: -40px;
+            left: -40px;
+            transform: translateZ(-10px);
+        }
+        
+        .circle-2 {
+            width: 180px;
+            height: 180px;
+            bottom: -60px;
+            right: -60px;
+            transform: translateZ(-15px);
+        }
+        
+        /* Enhanced Icon Elements with 3D Spider Web Animations */
+        .icons-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            pointer-events: none;
+            transform-style: preserve-3d;
+        }
+        
+        .icon {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 54px;
+            height: 54px;
+            background-color: var(--primary-color);
+            color: var(--accent-color);
+            border-radius: 50%;
+            font-size: 1.4rem;
+            box-shadow: 
+                0 5px 15px rgba(30, 58, 95, 0.2),
+                0 10px 20px rgba(0, 0, 0, 0.1);
+            opacity: 0.9;
+            transform-style: preserve-3d;
+        }
+        
+        /* Positions for icons with 3D depths */
+        .icon:nth-child(1) { top: 15%; left: 15%; animation-delay: 0s; transform: translateZ(-80px); }
+        .icon:nth-child(2) { top: 25%; left: 85%; animation-delay: 0.5s; transform: translateZ(-120px); }
+        .icon:nth-child(3) { top: 65%; left: 80%; animation-delay: 1s; transform: translateZ(-90px); }
+        .icon:nth-child(4) { top: 75%; left: 15%; animation-delay: 1.5s; transform: translateZ(-110px); }
+        .icon:nth-child(5) { top: 45%; left: 25%; animation-delay: 2s; transform: translateZ(-130px); }
+        .icon:nth-child(6) { top: 20%; left: 35%; animation-delay: 2.5s; transform: translateZ(-70px); }
+        
+        /* Enhanced Spider Web Connecting Lines in 3D */
+        .web-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            transform-style: preserve-3d;
+        }
+        
+        .web-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+            opacity: 0;
+            transform-origin: left center;
+            animation: webLineReveal 5s infinite;
+        }
+        
+        .web-line-1 {
+            top: 17.5%;
+            left: 18%;
+            width: 67%;
+            transform: rotate(25deg) translateZ(-100px);
+            animation-delay: 0.2s;
+        }
+        
+        .web-line-2 {
+            top: 27.5%;
+            left: 38%;
+            width: 47%;
+            transform: rotate(-15deg) translateZ(-90px);
+            animation-delay: 0.7s;
+        }
+        
+        .web-line-3 {
+            top: 45%;
+            left: 28%;
+            width: 52%;
+            transform: rotate(25deg) translateZ(-110px);
+            animation-delay: 1.2s;
+        }
+        
+        .web-line-4 {
+            top: 65%;
+            left: 18%;
+            width: 62%;
+            transform: rotate(45deg) translateZ(-95px);
+            animation-delay: 1.7s;
+        }
+        
+        .web-line-5 {
+            top: 32%;
+            left: 25%;
+            width: 20%;
+            transform: rotate(70deg) translateZ(-105px);
+            animation-delay: 2.2s;
+        }
+        
+        .web-pulse {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            box-shadow: 0 0 15px var(--accent-color);
+            opacity: 0;
+            animation: pulseAnimation 4s infinite;
+        }
+        
+        .pulse-1 { top: 15%; left: 15%; animation-delay: 1s; transform: translateZ(-95px); }
+        .pulse-2 { top: 25%; left: 85%; animation-delay: 2s; transform: translateZ(-105px); }
+        .pulse-3 { top: 65%; left: 80%; animation-delay: 3s; transform: translateZ(-85px); }
+        .pulse-4 { top: 75%; left: 15%; animation-delay: 0.5s; transform: translateZ(-115px); }
+        .pulse-5 { top: 45%; left: 25%; animation-delay: 1.5s; transform: translateZ(-90px); }
+        
+        /* Enhanced 3D animations */
+        @keyframes iconPulse {
+            0% { transform: scale(1) translateZ(-100px); opacity: 0.9; }
+            50% { transform: scale(1.15) translateZ(-90px); opacity: 1; }
+            100% { transform: scale(1) translateZ(-100px); opacity: 0.9; }
+        }
+        
+        .icon {
+            animation: iconPulse 4s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0% { transform: translate3d(0, 0, -100px) rotateX(0deg) rotateY(0deg); }
+            25% { transform: translate3d(10px, 10px, -110px) rotateX(3deg) rotateY(3deg); }
+            50% { transform: translate3d(0, 5px, -100px) rotateX(0deg) rotateY(0deg); }
+            75% { transform: translate3d(-10px, 10px, -90px) rotateX(-3deg) rotateY(-3deg); }
+            100% { transform: translate3d(0, 0, -100px) rotateX(0deg) rotateY(0deg); }
+        }
+        
+        /* Enhanced Web Line Animation with 3D */
+        @keyframes webLineReveal {
+            0% { opacity: 0; width: 0; }
+            20% { opacity: 0.5; }
+            40% { opacity: 0.3; }
+            60% { opacity: 0.5; }
+            80% { opacity: 0.3; }
+            100% { opacity: 0; }
+        }
+        
+        /* Enhanced Pulse Animation with 3D */
+        @keyframes pulseAnimation {
+            0% { transform: scale(0) translateZ(-100px); opacity: 0; }
+            20% { opacity: 0.8; }
+            50% { transform: scale(2.5) translateZ(-90px); opacity: 0; }
+            100% { transform: scale(0) translateZ(-100px); opacity: 0; }
+        }
+        
+        /* Enhanced card highlight animation */
+        @keyframes highlightPulse {
+            0% { opacity: 0.2; transform: translateZ(5px); }
+            50% { opacity: 0.4; transform: translateZ(8px); }
+            100% { opacity: 0.2; transform: translateZ(5px); }
+        }
+        
+        .card-highlight {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;+
+            background: linear-gradient(to right, var(--accent-color), transparent);
+            opacity: 0.2;
+            animation: highlightPulse 3s infinite ease-in-out;
+        }
+        
+        /* Mouse parallax effect */
+        .parallax-container {
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+        
+        /* Glass morphism elements */
+        .glass-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .glass-1 {
+            width: 150px;
+            height: 150px;
+            top: -75px;
+            right: -75px;
+            transform: translateZ(-20px);
+        }
+        
+        .glass-2 {
+            width: 100px;
+            height: 100px;
+            bottom: -50px;
+            left: -50px;
+            transform: translateZ(-25px);
+        }
+        
+        @media (max-width: 768px) {
+            .card {
+                padding: 3.5rem 2.5rem;
+            }
+            
+            .logo {
+                font-size: 3rem;
+            }
+            
+            .svg-logo {
+                width: 140px;
+            }
+            
+            .tagline {
+                font-size: 1rem;
+                margin-bottom: 2.5rem;
+            }
+            
+            .btn {
+                padding: 14px 38px;
+                font-size: 0.95rem;
+            }
+            
+            .icon {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+            
+            /* Adjust 3D effects for mobile */
+            body {
+                perspective: 500px;
+            }
+            
+            .floating-plane {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Floating Planes -->
+    <div class="floating-plane plane-1"></div>
+    <div class="floating-plane plane-2"></div>
+    <div class="floating-plane plane-3"></div>
+    
+    <!-- Background Elements -->
+    <div class="background-pattern"></div>
+    <div class="accent-element"></div>
+    
+    <!-- Spider Web Animation -->
+    <div class="web-container">
+        <div class="web-line web-line-1"></div>
+        <div class="web-line web-line-2"></div>
+        <div class="web-line web-line-3"></div>
+        <div class="web-line web-line-4"></div>
+        <div class="web-line web-line-5"></div>
+        
+        <div class="web-pulse pulse-1"></div>
+        <div class="web-pulse pulse-2"></div>
+        <div class="web-pulse pulse-3"></div>
+        <div class="web-pulse pulse-4"></div>
+        <div class="web-pulse pulse-5"></div>
+    </div>
+    
+    <!-- Main Content with Parallax Effect -->
+    <div class="container parallax-container" id="parallax-container">
+        <div class="card">
+            <div class="card-highlight"></div>
+            <div class="decorative-circle circle-1"></div>
+            <div class="decorative-circle circle-2"></div>
+            <div class="glass-effect glass-1"></div>
+            <div class="glass-effect glass-2"></div>
+            
+            <div class="logo-container">
+                <!-- Integrated SVG Logo -->
+                <svg class="svg-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200">
+                  <!-- Background elements -->
+                  <rect width="400" height="200" fill="#ffffff" opacity="0" />
+                  
+                  <!-- Decorative elements -->
+                  <circle cx="200" cy="100" r="80" fill="#f9f8f6" opacity="0.5" />
+                  <circle cx="200" cy="100" r="60" stroke="#c8a45c" stroke-width="1" fill="none" opacity="0.2" />
+                  
+                  <!-- "E" stylized as a money graph -->
+                  <g fill="#1e3a5f">
+                    <path d="M150 60 L150 140 L220 140" stroke="#1e3a5f" stroke-width="12" stroke-linecap="round" fill="none" />
+                    <path d="M150 100 L200 100" stroke="#1e3a5f" stroke-width="12" stroke-linecap="round" fill="none" />
+                    <path d="M150 60 L220 60" stroke="#1e3a5f" stroke-width="12" stroke-linecap="round" fill="none" />
+                  </g>
+                  
+                  <!-- Coin/money element -->
+                  <circle cx="250" cy="100" r="30" fill="#c8a45c" opacity="0.9" />
+                  <circle cx="250" cy="100" r="25" fill="#ffffff" opacity="0.3" />
+                  <path d="M250 80 L250 120 M240 85 L260 85 M240 95 L260 95 M240 105 L260 105 M240 115 L260 115" stroke="#1e3a5f" stroke-width="3" stroke-linecap="round" />
+                  
+                  <!-- Accent lines -->
+                  <path d="M130 150 L270 150" stroke="#c8a45c" stroke-width="3" opacity="0.7" />
+                  <path d="M140 160 L260 160" stroke="#c8a45c" stroke-width="2" opacity="0.4" />
+                  
+                  <!-- Small decorative dots representing expenses -->
+                  <circle cx="160" cy="70" r="3" fill="#304a7d" />
+                  <circle cx="180" cy="110" r="3" fill="#304a7d" />
+                  <circle cx="200" cy="75" r="3" fill="#304a7d" />
+                  <circle cx="220" cy="120" r="3" fill="#304a7d" />
+                  
+                  <!-- Connect the dots with thin lines (expense flow) -->
+                  <path d="M160 70 L180 110 L200 75 L220 120" stroke="#304a7d" stroke-width="1" fill="none" opacity="0.5" />
+                </svg>
+                
+                <h1 class="logo">Expentia</h1>
+                <span class="logo-accent"></span>
+            </div>
+            <p class="tagline">Your money, Your rhythm</p>
+            <a href="{{ url_for('login') }}" class="btn">Get Started</a>
+        </div>
+    </div>
+    
+    <!-- Enhanced Icon Elements -->
+    <div class="icons-container">
+        <div class="icon">💰</div>
+        <div class="icon">🛒</div>
+        <div class="icon">🏠</div>
+        <div class="icon">💎</div>
+        <div class="icon">📊</div>
+        <div class="icon">✨</div>
+    </div>
+    
+    <!-- JavaScript for Parallax Effect -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('parallax-container');
+            
+            document.addEventListener('mousemove', function(e) {
+                if (!container) return;
+                
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+                
+                const centerX = window.innerWidth / 2;
+                const centerY = window.innerHeight / 2;
+                
+                const moveX = (mouseX - centerX) / 50;
+                const moveY = (mouseY - centerY) / 50;
+                
+                container.style.transform = `rotateY(${moveX}deg) rotateX(${-moveY}deg)`;
+            });
+            
+            // Reset transform when mouse leaves the window
+            document.addEventListener('mouseleave', function() {
+                if (!container) return;
+                container.style.transform = 'rotateY(0deg) rotateX(0deg)';
+            });
+        });
+    </script>
+</body>
+</html>

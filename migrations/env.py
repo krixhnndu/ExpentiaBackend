@@ -1,0 +1,4 @@
+SECRET_KEY=your-secret-key
+MAIL_USERNAME=expentiaadmiapp@gmail.com
+MAIL_PASSWORD=jqlfpuhudywznqmz
+DATABASE_URL=mysql://expentia_natureorif:2150965baf4e7694ab948821e9307ed1485d06da@t7oxu.h.filess.io:3307/expentia_natureorif
