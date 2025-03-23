@@ -4,6 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_mail import Mail, Message
 from flask_cors import CORS
+from flask_migrate import Migrate  # Import Flask-Migrate
 from dotenv import load_dotenv
 import os
 
@@ -32,6 +33,7 @@ db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+migrate = Migrate(app, db)  # Initialize Flask-Migrate
 
 # User Model
 class User(db.Model, UserMixin):
@@ -110,9 +112,6 @@ def signup():
     
     return render_template('signup.html')
 
-
-
-
 # Page Routes
 @app.route('/')
 def index():
@@ -153,12 +152,6 @@ def get_username():
 
     return {"username": current_user.username}, 200
 
-# Function to create the database
-def create_db():
-    with app.app_context():
-        db.create_all()
-
 # Run the app
 if __name__ == '__main__':
-    create_db()
     app.run(debug=True)
