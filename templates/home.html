@@ -308,7 +308,7 @@
         <a href="/expensetracker" class="nav-button">
             <i class="fas fa-tachometer-alt"></i> Expense Tracker
         </a>
-        <a href="/index" class="logout-button">
+        <a href="{{ url_for('logout') }}" class="logout-button">
             <i class="fas fa-sign-out-alt"></i> Logout
         </a>
     </div>
@@ -369,13 +369,25 @@ document.addEventListener("DOMContentLoaded", function() {
 async function fetchUsername() {
     try {
         let response = await fetch("/api/username");
+        
+        if (response.status === 401) { // Unauthorized (User is logged out)
+            console.log("User is not logged in.");
+            document.getElementById("username").innerText = "Guest";
+            return;
+        }
+        
+        if (!response.ok) throw new Error("Failed to fetch username");
+        
         let data = await response.json();
-        document.getElementById("username").textContent = "Welcome, " + data.username + "!";
+        document.getElementById("username").innerText = data.username;
     } catch (error) {
         console.error("Error fetching username:", error);
+        document.getElementById("username").innerText = "Guest"; // Fallback
     }
 }
-</script>
 
+fetchUsername();
+
+</script>
 </body>
 </html>
